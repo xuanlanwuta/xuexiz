@@ -1,0 +1,20 @@
+import threading
+import time
+#方法一：将要执行的方法作为参数传给Thread的构造方法
+def action(i):
+    time.sleep(1)
+    print ('the arg is:%s' %i)
+
+for i in range(4):
+    t =threading.Thread(target=action,args=(i,))
+    t.start()
+＃方法二:定义一个类用来使用Thread.
+class fangf(threading.Thread):
+
+    def run(self):#定义每个线程要运行的函数
+        time.sleep(1)
+        print ("ddaadsa")
+
+for i in range(4):
+    t =fangf()
+    t.start()
