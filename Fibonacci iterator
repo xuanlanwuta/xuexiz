@@ -1,0 +1,22 @@
+"""斐波那契数列迭代器"""
+class Fbi(object):
+    def __init__(self,n):
+        self.index = 0
+        self.sum1 = 0
+        self.sum2 = 1
+        self.n = n
+    def __iter__(self):
+        return self
+    def __next__(self):
+        while self.index < self.n:
+            num = self.sum1
+            self.sum1, self.sum2 = self.sum2, self.sum2+self.sum1
+            self.index += 1
+            return num
+        else:
+            raise StopIteration
+
+if __name__ == '__main__':
+    f = Fbi(10)
+    for i in f:
+        print(i)
