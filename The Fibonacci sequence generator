@@ -1,0 +1,11 @@
+def fbi(n):
+    index = 0
+    sun1 = 0
+    sun2 = 1
+    while index < n:
+        sum = sun1
+        sun1, sun2 = sun2, sun1+sun2
+        index += 1
+        yield sum
+c = fbi(10)
+print(list(c))
