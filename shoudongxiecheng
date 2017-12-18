@@ -1,0 +1,21 @@
+
+from greenlet import greenlet
+import time
+def work1():
+    while True:
+        print('11')
+        g2.switch()
+        time.sleep(1)
+
+
+def work2():
+    while True:
+        print ('22')
+        g1.switch()
+        time.sleep (1)
+
+if __name__ == '__main__':
+    g1 = greenlet(work1)
+    g2 = greenlet(work2)
+    g1.switch()
+    g2.switch()
