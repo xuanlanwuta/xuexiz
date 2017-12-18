@@ -1,0 +1,14 @@
+import gevent
+from time import sleep
+
+def work1(n):
+	for i in range(n):
+		print('in work1%s'% gevent.getcurrent())
+		sleep(1)
+g1 = gevent.spawn(work1,10)
+g2 = gevent.spawn(work1,10)
+
+gevent.joinall([g1,g2])
+import gevent
+from gevent import monkey
+monkey.patch_all()
