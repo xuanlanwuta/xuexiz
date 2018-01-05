@@ -1,0 +1,12 @@
+def use_proxy(proxy_addr,url):
+    import urllib.request
+    proxy = urllib.request.ProxyHandler({'http':proxy_addr})    # 设置代理服务器
+    opener = urllib.request.build_opener(proxy,urllib.request.HTTPHandler)  # 自定义一个opener的对象  第一个是代理,第二个是类
+    urllib.request.install_opener(opener)     # 使爬取的工作对象变更为代理服务器
+    data = urllib.request.urlopen(url).read().decode()  # 爬取网页
+    return data
+proxy_addr = "122.136.212.132:53281"
+data = use_proxy(proxy_addr,"http://www.baidu.com")
+print(len(data))
+
+
