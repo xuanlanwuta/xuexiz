@@ -1,6 +1,7 @@
 import time
 import pymysql
 import re
+import urllib.parse
 
 
 # 路由：根据不一样的请求，不一样的函数去服务器
@@ -97,7 +98,7 @@ def center(ret):
                         <td>%s</td>
                         <td>%s</td>
                         <td>
-                        <a type="button" class="btn btn-default btn-xs" href="/update/000822.html"> <span class="glyphicon glyphicon-star" aria-hidden="true"></span> 修改 </a>
+                        <a type="button" class="btn btn-default btn-xs" href="/update/%s.html"> <span class="glyphicon glyphicon-star" aria-hidden="true"></span> 修改 </a>
                         </td>
                         <td>
                         <input type="button" value="删除" id="toDel" name="toDel" systemidvaule="%s">
@@ -107,7 +108,7 @@ def center(ret):
 
     code_html = ""
     for temp in data_from_mysql:
-        code_html += line_html % (temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[0])
+        code_html += line_html % (temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[0],temp[0])
 
     # 3. 替换数据
     html_content = re.sub(r"\{%content%\}", code_html, html_content)
@@ -226,6 +227,53 @@ def del_focus(ret):
     conn.close()
 
     return "-----取消关注成功----"
+
+
+@route(r"/update/(\d+)\.html")
+def show_edit_noteinfo_page(ret):
+    
+    # 0. 提取股票代码
+    stock_code = ret.group(1)
+
+    # 1. 打开模板
+    with open("./templates/update.html") as f:
+        html = f.read()
+
+    # 2. 从数据库中查询数据
+    conn = pymysql.connect(host='localhost',port=3306,user='root',password='mysql',database='stock_db',charset='utf8')
+    cursor = conn.cursor()
+    sql = """select note_info from focus where info_id=(select id from info where code=%s);"""
+    cursor.execute(sql, [stock_code])
+    # data_from_mysql = cursor.fetchall()  # ((备注信息,),)
+    data_from_mysql = cursor.fetchone()  # (备注信息,)
+    cursor.close()
+    conn.close()
+
+    # 3. 合并数据
+    html = re.sub(r"\{%note_info%\}", data_from_mysql[0], html)
+    html = re.sub(r"\{%code%\}", stock_code, html)
+
+    # 4. 返回数据给http服务器
+    return html
+
+
+@route(r"/update/(\d+)/(.*)\.html")
+def save_edit_noteinfo(ret):
+    # 1. 提取股票代码以及备注信息
+    stock_code = ret.group(1)  # 股票代码
+    note_info = urllib.parse.unquote(ret.group(2))  # 备注
+
+    # 2. 修改数据
+    conn = pymysql.connect(host='localhost',port=3306,user='root',password='mysql',database='stock_db',charset='utf8')
+    cursor = conn.cursor()
+    sql = """update focus as f inner join info as i on i.id=f.info_id set f.note_info=%s where i.code=%s;"""
+    cursor.execute(sql, [note_info, stock_code])
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return "修改备注成功..."
+
 
 def application(env, set_header):
     # 1. 调用set_header指向的函数，将response_header传递过去

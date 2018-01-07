@@ -2,12 +2,13 @@ import socket
 import multiprocessing
 import re
 import time
-import dynamic.mini_framework
+# import dynamic.mini_framework
+import sys
 
 
 class WSGIServer:
 
-    def __init__(self):
+    def __init__(self, app):
         """初始化功能，创建套接字/绑定等"""
 
         # 创建一个服务器套接字
@@ -18,6 +19,8 @@ class WSGIServer:
         self.server_socket.bind(('', 9999))
         # 监听 被动套接字  设置已完成三次握手队列的长度
         self.server_socket.listen(128)
+
+        self.app = app
 
     def request_handler(self, client_socket):
         """为每个客户进行服务"""
@@ -107,7 +110,8 @@ class WSGIServer:
             env['PATH_INFO'] = path_info  # /index.html
 
             # 响应体(response_body)
-            response_body = dynamic.mini_framework.application(env, self.set_headers)
+            # response_body = dynamic.mini_framework.application(env, self.set_headers)
+            response_body = self.app(env, self.set_headers)
             """
             if path_info == "/index.py":
                 response_body = mini_framework.index()
@@ -146,12 +150,78 @@ class WSGIServer:
 
 
 def main():
+
+    if len(sys.argv) != 2:
+        print("请按照如下运行方式运行程序:")
+        print("python3 xxxx.py mini_framework:application")
+        return
+
+    # 提取模块名以及函数名
+    frame_app_name = sys.argv[1]  # mini_framework:application
+
+    # 通过正则分别提取
+    ret = re.match(r"(.*):(.*)", frame_app_name)
+    if ret:
+        frame_name = ret.group(1)  # mini_framework
+        app_name = ret.group(2)  # application
+    else:
+        print("请按照如下运行方式运行程序:")
+        print("python3 xxxx.py mini_framework:application")
+        return
+
+    # 添加dynamic到sys.path
+    sys.path.append("./dynamic")
+
+    # 当import frame_name的时候，python会把import后面的frame_name当做模块名，去找frame_name.py而不是把 frame_name当做变量
+    # 取出其中的字符串 然后再去加载 模块的
+    # import frame_name
+    frame = __import__(frame_name)  # 1. 导入mini_framework 2. 让frame这变量指向刚刚被导入的模块
+
+    # 让app这个变量指向了frame指向的模块中的指定的函数(mini_framework.applicationi)
+    app = getattr(frame, app_name)  # 到frame指向的模块中找app_name指向的变量
+
     # 1. 创建一个server对象
-    wsgi_server = WSGIServer()
+    wsgi_server = WSGIServer(app)
 
     # 2. 调用这个对象中的运行方法
     wsgi_server.run()
 
 if __name__ == '__main__':
     main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
