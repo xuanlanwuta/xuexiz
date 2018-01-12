@@ -1,0 +1,241 @@
+# coding=utf-8
+# 狼人杀
+# langrenshu = int(input("请输入狼人个数: "))
+# pingminshu = int(input("请输入平民个数: "))
+# shenshu = int(input("请输入神的个数: "))
+# jishu = 0
+# jishu = langrenshu + pingminshu + shenshu
+jishu = 9
+shenfen = {}
+langren_shu = []    # 狼人的号码
+siwangshu = []     # 死亡的人的号码
+sharenshu = [0]     # 狼人杀的人的号码,只有一个!!
+yingzi_fu = [0]
+jieyao = 1
+duyao = 1
+qianxing_sha = 1
+
+class Langren(object):
+    def __init__(self):
+        print("狼人请睁眼")
+        for i in range(2):
+            shu = input("输入狼人的号码:")
+            langren_shu.append(shu)
+        print("狼人请选择想要击杀的人", "确定是他吗?")
+        shashu = input('输入狼人要杀的人：')
+        sharenshu[0] = shashu
+        if shashu != shenfen["影子"]:
+            siwangshu.append(shashu)
+        else:
+            if yingzi_fu[0] in siwangshu:
+                siwangshu.append(shashu)
+        print("狼人请闭眼")
+
+    def sharen(self):
+        print("狼人请睁眼", "狼人请选择想要击杀的人")
+        print("确定是他吗?")
+        shashu = input('狼人要杀的人：')
+        sharenshu[0] = shashu
+        if shashu != shenfen["影子"]:
+            siwangshu.append(shashu)
+        else:
+            if yingzi_fu[0] in siwangshu:
+                siwangshu.append(shashu)
+        print("狼人请闭眼")
+        if sharenshu[0] in siwangshu:
+            return ("昨天死亡的玩家是",sharenshu[0])
+
+
+class Yingzi(object):
+    def __init__(self):
+        print("影子请睁眼")
+        self.shu = input("输入影子代表的数字")
+        shenfen["影子"] = self.shu
+        print("请选择你想要跟随的人")
+        self.genshu = input("输入影子跟随的号码:")
+        yingzi_fu[0] = self.genshu
+        print("影子请闭眼")
+
+    def yingfangfa(self):
+        if self.genshu in siwangshu:
+            for shenfenjian, shuzi in shenfen:
+                if shenfen[shenfenjian] == self.genshu:
+                    print("你的身份是%s" % shenfen[shenfenjian])
+            else:
+                if self.genshu in langren_shu:
+                    print("你的身份是这个狼人")
+                    langren_shu.append(self.shu)
+                else:
+                    print("你的身份是平民")
+
+
+class Nvwu(object):
+    def __init__(self):
+        global jieyao
+        global duyao
+        print("女巫请睁眼")
+        shu = input("输入女巫所代表的数字")
+        shenfen["女巫"] = shu
+        print("女巫今晚死亡的是他你要救他吗?%s" % sharenshu[0])
+        panduanjie = input("确定要救他吗? :y")
+        if panduanjie == "y":
+            jieyao = 0
+            if sharenshu[0] in siwangshu:
+                siwangshu.remove(sharenshu[0])
+        else:
+            print("女巫今晚死亡的是他你要救他吗?", "确定要救他吗?")
+        panduandu = input("你还有一瓶毒药,要使用它吗:y")
+        if panduandu == "y":
+            duyao = 0
+            self.duren = input("输入女巫要毒的人号码")
+            print("确定是他吗?")
+            if self.duren != shenfen["影子"]:
+                siwangshu.append(self.duren)
+            else:
+                if yingzi_fu[0] in siwangshu:
+                    siwangshu.append(self.duren)
+
+        else:
+            print("你还有一瓶毒药,要使用它吗", "确定是他吗?")
+        print("女巫请闭眼")
+
+    def __str__(self):
+        if siwangshu.append (self.duren):
+            print("昨天毒死的人是%s" % self.duren)
+
+
+
+    def jiudu(self):
+        global jieyao
+        global duyao
+        print("女巫请睁眼")
+        if jieyao == 0:
+            print("女巫今晚死亡的是他你要救他吗?", "确定要救他吗?")
+        else:
+            print("女巫今晚死亡的是他你要救他吗?%s" % sharenshu[0])
+            panduanjie = input("确定要救他吗? :y")
+            if panduanjie == "y":
+                jieyao = 0
+                if sharenshu[0] in siwangshu:
+                    siwangshu.remove(sharenshu[0])
+        if duyao == 0:
+            print("你还有一瓶毒药,要使用它吗", "确定是他吗?")
+        else:
+            panduandu = input("你还有一瓶毒药,要使用它吗:y")
+            if panduandu == "y":
+                duyao =0
+                duren = input("输入女巫要毒的人号码")
+                print("确定是他吗?")
+                if duren != shenfen["影子"]:
+                    siwangshu.append(duren)
+                else:
+                    if yingzi_fu[0] in siwangshu:
+                        siwangshu.append(duren)
+                if siwangshu.append(duren):
+                    return ("昨天毒死的人是" , duren)
+        print("女巫请闭眼")
+
+
+class Qianxing(object):
+    def __init__(self):
+        print("潜行者请睁眼")
+        shu = input("输入潜行者代表的数字")
+        shenfen["潜行者"] = shu
+        print("潜行者请闭眼")
+
+    def qiansha(self):
+        global qianxing_sha
+        print("潜行者请睁眼")
+        print("潜行者确定要杀他吗?")
+        pandu = input("如果要击杀目标输入y")
+        if pandu == "y":
+            qianxing_sha = 0
+            print("确定是他吗?")
+            shashu = input("输入潜行者击杀的目标数字")
+            if shashu != shenfen["影子"]:
+                siwangshu.append(shashu)
+            else:
+                if yingzi_fu[0] in siwangshu:
+                    siwangshu.append(shashu)
+            print("潜行者请闭眼")
+            if siwangshu.append(shashu):
+                print ("昨天死亡的玩家还有" , shashu)
+        else:
+            print("确定是他吗?")
+            print("潜行者请闭眼")
+
+
+class Yehaizi(object):
+    def __init__(self):
+        print("野孩子请睁眼")
+        self.shu = input("输入野孩子所代表的数字")
+        shenfen["野孩子"] = self.shu
+        print("请选择你想要跟随的人")
+        self.genshu = input("输入野孩子跟随人的数字")
+        if self.genshu in langren_shu:
+            langren_shu.append(self.shu)
+        print("野孩子请闭眼")
+
+
+class Yuyanjia(object):
+    def __init__(self):
+        print("预言家请睁眼")
+        shu = input("输入预言家代表的数字")
+        shenfen["预言家"] = shu
+        shu = input('选择你要验的人：')
+        if shu in langren_shu:
+            print('他是大拇指朝下')
+        else:
+            print('他是大拇指朝上')
+        print("预言家请闭眼")
+
+    def yanren(self):
+        print("预言家请睁眼")
+        shu = input('选择你要验的人：')
+        if shu in langren_shu:
+            print('他是大拇指朝下')
+        else:
+            print('他是大拇指朝上')
+        print("预言家请闭眼")
+
+
+def main():
+    yingzi = Yingzi()
+    langren = Langren()
+    yehaizi = Yehaizi()
+    nvwu = Nvwu()
+    qianxingzhe = Qianxing()
+    yuyanjia = Yuyanjia()
+
+    def diyiye():
+        yingzi.yingfangfa()
+        langren.sharen()
+        nvwu.jiudu()
+        qianxingzhe.qiansha()
+        yuyanjia.yanren()
+
+        if (sharenshu[0] not in siwangshu) and (duyao == 1):
+            print("昨天是平安夜")
+
+    diyiye()
+    if yehaizi.genshu in siwangshu:
+        langren_shu.append(yehaizi.shu)
+
+    if (sharenshu[0] not in siwangshu):
+        print ("昨天是平安夜")
+
+    while True:
+        diyiye()
+        if langren_shu == jishu - len(siwangshu):
+            print("狼人胜利")
+            break
+        if (set(langren_shu)&set(siwangshu)) == set(langren_shu):
+            print("好人胜利")
+            break
+        if (sharenshu[0] not in siwangshu):
+            print ("昨天是平安夜")
+
+main()
+# if __name__ == '__main__':
+#     with open("langrensha.txt", "a") as f:
+#         f.write(main())
