@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/jquery-1.12.4.min.js"></script>
+    <script>
+        $(function () {
+            $('button').click(function () {
+                $("#dong").animate({"left": '400px',"height": "200px",'width': '400px','font-size':'100px'},1000,length,function () {
+                    setTimeout(gg(), 2000);
+                    function gg() {
+                        $("#dong").animate({"left": '0px',"height": "100px",'width': '100px','font-size':'14px'},1000,length,function () {
+                        });
+
+                    }
+                })
+                })
+            });
+
+    </script>
+    <style>
+
+        #dong{
+            height: 100px;
+            width: 100px;
+            margin: 30px;
+            font-size: 14px;
+            color: red;
+            background: #CCCCCC;
+            position: relative;
+
+        }
+    </style>
+</head>
+<body >
+<button>按钮</button>
+   <div id="dong">
+       jqjqjqjq
+   </div>
+
+</body>
+</html>
