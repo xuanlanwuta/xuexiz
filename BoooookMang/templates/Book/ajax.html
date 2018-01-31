@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ajax属性</title>
+    <script src="/static/js/jquery-1.12.4.min.js"></script>
+    <script>
+        $(function () {
+            $('#ajaxbtn').click(function () {
+                $.get('/jsondata', function (jsondict) {
+                    $('#test li').remove()
+                    booklist = jsondict.jsondata;
+                    test_ul = $('#test');
+                    $.each(booklist, function (i, book) {
+                        test_ul.append("<li>" + book.name + "</li>")
+                    })
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+ <input id="ajaxbtn" type="button" value="ajax_request">
+
+      <ul>
+          <li>鹅鹅鹅</li>
+          <li>曲项向天歌</li>
+          <li>白毛浮绿水</li>
+          <li>红掌拨清波</li>
+      </ul>
+
+      <ul id="test" style="background: red;width: 100px;height: 100px;">
+          <li>床前明月光</li>
+          <li>地上鞋两双</li>
+          <li>举头望明月</li>
+          <li>低头思故乡</li>
+      </ul>
+</body>
+</html>

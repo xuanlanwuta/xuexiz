@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>请求信息</title>
+</head>
+<body>
+    <ul>
+        <h1>{{ path }}</h1>
+        <h1>{{ methon }}</h1>
+        <h1>{% for hh in query_dict.get %}
+            <h2>{{ hh }}</h2>
+        {% endfor %}
+        </h1>
+    </ul>
+</body>
+</html>
